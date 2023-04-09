@@ -1,60 +1,33 @@
 "use strict"
-
-function sendText(){
-    var text = document.getElementById("textedit").value;
-    if(text.length != 0){
-        console.log(text);
-        var url = "chat.php?phrase=" + encodeURIComponent(text);
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById("textedit").value = "";
-          }
-        };
-    }
-}
-
-
 function loadChat() {
-    var ta = document.getElementById("ta");
-    var lastLine = "";
-
-
-    // Reload chat every second
-    setInterval(function() {
-        getChat(function(chat) {
-            // Reverse the chat array to show last message at the top
-            chat.reverse();
-            var html = "";
-            for (var i = 0; i < chat.length && i < 10; i++) {
-                html += "<p>" + chat[i] + "</p>";
-            }
-            ta.innerHTML = html;
-
-            // Scroll to the top if there's a new message
-            if (chat[0] !== lastLine) {
-                ta.scrollTop = 0;
-                lastLine = chat[0];
-            }
-        });
-    }, 1000);
-}
-
-
-// Function to get the chatlog.txt content
-function getChat(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "chatlog.txt", true);
+    let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var chat = xhr.responseText.split("\n");
-            // Remove empty lines
-            chat = chat.filter(function(line) {
-                return line.trim() !== "";
-            });
-            callback(chat);
+        if (this.readyState == 4 && this.status == 200) {
+            let chat = document.getElementById("ta");
+            chat.innerHTML = "";
+            let lines = this.responseText.split("\n");
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i]) {
+                    let para = document.createElement("p");
+                    para.innerText = lines[i];
+                    chat.appendChild(para);
+                }
+            }
         }
     };
+    xhr.open("GET", "chatlog.txt", true);
     xhr.send();
+    setTimeout(loadChat, 1000);
 }
+
+function sendMessage() {
+    let phrase = document.getElementById("textedit").value;
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "chat.php?phrase=" + phrase, true);
+    xhr.send();
+    document.getElementById("textedit").value = "";
+}
+
+window.onload = function() {
+    loadChat();
+};
