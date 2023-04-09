@@ -2,7 +2,7 @@
 
 function sendText(){
     var text = document.getElementById("textedit").value;
-    if(len(text)=!0){
+    if(text.length!=0){
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "chat.php?phrase=" + encodeURIComponent(text), true);
         xhr.send();
