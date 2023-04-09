@@ -25,7 +25,9 @@ function sendMessage() {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "chat.php?phrase=" + phrase, true);
     xhr.send();
+    window.history.pushState(null, null, "chat.php?phrase=" + phrase);
     document.getElementById("textedit").value = "";
+
 }
 
 window.onload = function() {
