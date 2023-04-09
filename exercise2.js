@@ -1,28 +1,55 @@
-'use strict';
+"use strict"
+
+function sendText(){
+    var text = document.getElementById("textedit").value;
+    if(len(text)=!0){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "chat.php?phrase=" + encodeURIComponent(text), true);
+        xhr.send();
+        text="";
+    }
+}
+
 
 function loadChat() {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        const text = this.responseText.split("\n");
-        let html = "";
-        for (let i = 0; i < text.length; i++) {
-            if(len(text[i])!=0){
-                html += `<p style="color:${color}">${text[i]}</p>`;
-            }
-        }
-        document.getElementById("ta").innerHTML = html;
-      }
-    };
-    xhttp.open("GET", "chatlog.txt", true);
-    xhttp.send();
-    setTimeout(loadChat, 1000);
-  }
+    var ta = document.getElementById("ta");
+    var lastLine = "";
 
-  function sendChat(){
-    var text = document.getElementById("textedit").value
-    var params = 'phrase='+text;
-    var newUrl = window.location.pathname + '?' + params;
-    history.pushState(null, null, newUrl);
-    text="" //delete the text
+
+    // Reload chat every second
+    setInterval(function() {
+        getChat(function(chat) {
+            // Reverse the chat array to show last message at the top
+            chat.reverse();
+            var html = "";
+            for (var i = 0; i < chat.length && i < 10; i++) {
+                html += "<p>" + chat[i] + "</p>";
+            }
+            ta.innerHTML = html;
+
+            // Scroll to the top if there's a new message
+            if (chat[0] !== lastLine) {
+                ta.scrollTop = 0;
+                lastLine = chat[0];
+            }
+        });
+    }, 1000);
+};
+
+
+// Function to get the chatlog.txt content
+function getChat(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "chatlog.txt", true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var chat = xhr.responseText.split("\n");
+            // Remove empty lines
+            chat = chat.filter(function(line) {
+                return line.trim() !== "";
+            });
+            callback(chat);
+        }
+    };
+    xhr.send();
 }
