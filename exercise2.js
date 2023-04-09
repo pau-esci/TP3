@@ -4,13 +4,14 @@ function sendText(){
     var text = document.getElementById("textedit").value;
     if(text.length != 0){
         console.log(text);
-        var url = new URL(window.location.href);
-
-        // Add a new parameter to the URL
-        url = url + 'chat.php?phrase='+text;
-
-        // Replace the current URL with the new URL that contains the new parameter
-        window.history.replaceState(null, null, url);
+        var url = "chat.php?phrase=" + encodeURIComponent(text);
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById("textedit").value = "";
+          }
+        };
     }
 }
 
