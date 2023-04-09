@@ -1,6 +1,7 @@
 "use strict"
 
 function sendText(){
+    console.log("yes");
     var text = document.getElementById("textedit").value;
     if(text.length!=0){
         var xhr = new XMLHttpRequest();
