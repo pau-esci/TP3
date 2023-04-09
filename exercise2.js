@@ -22,12 +22,13 @@ function loadChat() {
 
 function sendMessage() {
     let phrase = document.getElementById("textedit").value;
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", "chat.php?phrase=" + phrase, true);
-    xhr.send();
-    window.history.pushState(null, null, "chat.php?phrase=" + phrase);
-    document.getElementById("textedit").value = "";
-
+    if(phrase.length!=0){
+        window.history.pushState(null, null, "chat.php?phrase=" + phrase);
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "chat.php?phrase=" + phrase, true);
+        xhr.send();
+        document.getElementById("textedit").value = "";
+    }
 }
 
 window.onload = function() {
