@@ -2,14 +2,16 @@
 
 function sendText(){
     var text = document.getElementById("textedit").value;
+    if(text.length != 0){
+        console.log(text);
+        var url = new URL(window.location.href);
 
-    var url = new URL(window.location.href);
+        // Add a new parameter to the URL
+        url.searchParams.set('chat.php?phrase', text);
 
-    // Add a new parameter to the URL
-    url.searchParams.set('chat.php?phrase', text);
-
-    // Replace the current URL with the new URL that contains the new parameter
-    window.history.replaceState(null, null, url);
+        // Replace the current URL with the new URL that contains the new parameter
+        window.history.replaceState(null, null, url);
+    }
 }
 
 
