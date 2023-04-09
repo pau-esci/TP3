@@ -34,7 +34,7 @@ function loadChat() {
             }
         });
     }, 1000);
-};
+}
 
 
 // Function to get the chatlog.txt content
