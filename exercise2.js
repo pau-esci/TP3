@@ -7,7 +7,7 @@ function sendText(){
         var url = new URL(window.location.href);
 
         // Add a new parameter to the URL
-        url.searchParams.set('chat.php?phrase', text);
+        url = url + 'chat.php?phrase='+text;
 
         // Replace the current URL with the new URL that contains the new parameter
         window.history.replaceState(null, null, url);
